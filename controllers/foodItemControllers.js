@@ -1,11 +1,12 @@
-class FoodItemControllers {
-    addFoodItem(req, res){}
+const foodItemsModels = require("../models/foodItemsModels");
 
-    editFoodItem(req, res) {}
+const addFoodItem = async (req, res) => {
+  const { nameFood, description, price, imageUrl, availableDate } = req.body;
+  try {
+  } catch (e) {}
+};
 
-    removeFoodItem(req, res) {}
 
-    getFootItemById(req, res) {}
-
-    getListFootItemInWeek(req, res) {}
+module.exports = {
+    addFoodItem,
 }
