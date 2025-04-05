@@ -2,11 +2,11 @@ const db = require("../config/database");
 const bcrypt = require("bcryptjs");
 
 // add user account
-const addUser = async (username, password, fullname, role) => {
+const addUser = async (username, password, fullname, role, employeeCode) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const [result] = await db.query(
-    "INSERT INTO users (username, password, fullname, role) VALUES (?, ?, ?, ?)",
-    [username, hashedPassword, fullname, role]
+    "INSERT INTO users (username, password, fullname, role, employee_code) VALUES (?, ?, ?, ?, ?)",
+    [username, hashedPassword, fullname, role, employeeCode]
   );
   return result.insertId;
 };

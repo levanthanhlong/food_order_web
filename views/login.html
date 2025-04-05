@@ -1,30 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Page</title>
-  <link href="../assets/css/login.css" rel="stylesheet">
-</head>
-<body>
-  <div class="login-container">
-    <div class="login-box">
-      <h2>Welcome Back</h2>
-      <p>Please login to continue</p>
-      <form action="#" method="post">
-        <div class="textbox">
-          <input type="text" placeholder="Username" name="username" required>
-        </div>
-        <div class="textbox">
-          <input type="password" placeholder="Password" name="password" required>
-        </div>
-        <input type="submit" value="Login" class="btn">
-      </form>
-      <div class="footer">
-        <a href="#">Forgot Password?</a>
-        <p>Don't have an account? <a href="#">Sign up</a></p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Page</title>
+    <link href="../assets/css/login.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-box">
+        <h2>Welcome Back</h2>
+        <p>Please login to continue</p>
+        <form id="loginForm">
+          <div class="textbox">
+            <input type="text" placeholder="Username" id="username" required />
+          </div>
+          <div class="textbox">
+            <input
+              type="password"
+              placeholder="Password"
+              id="password"
+              required
+            />
+          </div>
+          <input type="submit" value="Login" class="btn" />
+        </form>
+      
       </div>
     </div>
-  </div>
-</body>
+
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault(); // Ngăn chặn form submit mặc định
+
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+          console.log("-------");
+          try {
+            const response = await fetch("/api/user/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username, password }),
+            });
+            
+            const data = await response.json();
+            console.log("-------");
+            if (data.status === 1) {
+              // Lưu token vào localStorage (hoặc cookie)
+              localStorage.setItem("token", data.token);
+
+              // Kiểm tra username để điều hướng
+              if (username === "admin") {
+                window.location.href = "/homeAdmin";
+              } else {
+                window.location.href = "/home";
+              }
+            } else {
+              alert(data.message); // Hiển thị lỗi nếu đăng nhập thất bại
+            }
+          } catch (error) {
+            console.error("Lỗi:", error);
+            alert("Lỗi hệ thống, vui lòng thử lại!");
+          }
+        });
+    </script>
+  </body>
 </html>
