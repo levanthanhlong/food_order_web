@@ -13,4 +13,6 @@ router.get(
 );
 router.get("/login", pageController.renderLoginPage);
 
+router.get("/homeAdmin/createFoodItem", pageController.renderCreateFoodItem);
+
 module.exports = router;

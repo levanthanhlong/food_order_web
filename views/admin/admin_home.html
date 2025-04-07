@@ -1,10 +1,199 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trang Admin - Quản lý Món Ăn</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Roboto", sans-serif;
+      }
+
+      body {
+        display: flex;
+        min-height: 100vh;
+        background-color: #f4f6f8;
+        color: #333;
+      }
+
+      .sidebar {
+        width: 250px;
+        background-color: #2f3e46;
+        color: white;
+        padding: 20px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar h1 {
+        font-size: 22px;
+        margin-bottom: 30px;
+        color: #fff;
+        text-align: center;
+      }
+
+      .sidebar nav ul {
+        list-style-type: none;
+      }
+
+      .sidebar nav ul li {
+        margin: 15px 0;
+      }
+
+      .sidebar nav ul li a {
+        text-decoration: none;
+        color: #fff;
+        padding: 10px 15px;
+        display: block;
+        border-radius: 8px;
+        transition: background-color 0.3s;
+      }
+
+      .sidebar nav ul li a:hover {
+        background-color: #3e5a63;
+      }
+
+      .logout {
+        color: #ff6b6b !important;
+      }
+
+      .main-content {
+        flex: 1;
+        padding: 40px;
+      }
+
+      .main-content h2 {
+        font-size: 28px;
+        margin-bottom: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      }
+
+      th,
+      td {
+        padding: 16px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+      }
+
+      th {
+        background-color: #f0f0f0;
+        font-weight: bold;
+      }
+
+      .action-btn {
+        padding: 6px 10px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      .edit-btn {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .delete-btn {
+        background-color: #f44336;
+        color: white;
+      }
+
+      .edit-btn:hover {
+        background-color: #45a049;
+      }
+
+      .delete-btn:hover {
+        background-color: #e53935;
+      }
+    </style>
   </head>
-  <body class="bg-blue-200 text-center py-10">
-    <h1 class="">admin home</h1>
+  <body>
+    <aside class="sidebar">
+      <h1>Admin Món Ăn</h1>
+      <nav>
+        <ul>
+          <li><a href="/homeAdmin">🏠 Trang Chủ</a></li>
+          <li><a href="/homeAdmin/createFoodItem">➕ Thêm Món Ăn</a></li>
+          <li><a href="/logout" class="logout">🚪 Đăng Xuất</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h2>Danh Sách Món Ăn</h2>
+      <table id="foodItemsTable">
+        <thead>
+          <tr>
+            <th>Tên Món Ăn</th>
+            <th>Mô Tả</th>
+            <th>Giá (VNĐ)</th>
+            <th>Ngày Cung Cấp</th>
+            <th>Hành Động</th>
+          </tr>
+        </thead>
+        <tbody id="foodItemsList">
+          <!-- Các món ăn sẽ được thêm vào đây thông qua JavaScript -->
+        </tbody>
+      </table>
+    </main>
+
+    <script>
+      // Fetch food items và hiển thị chúng
+      async function fetchFoodItems() {
+        console.log("load-----------------");
+        try {
+          const res = await fetch("/api/foodItems/getAllFoodItems", {
+            method: "GET",
+            cache: "no-store",
+          });
+          const foodItemsList = document.getElementById("foodItemsList");
+          foodItemsList.innerHTML = "";
+          const result = await res.json();
+          if (!result.data || result.data.length === 0) {
+            foodItemsList.innerHTML =
+              "<tr><td colspan='5'>Không có món ăn nào.</td></tr>";
+            return;
+          }
+          
+          result.data.forEach((item) => {
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+    <td>${item.name_food}</td>
+    <td>${item.description}</td>
+    <td>${item.price} VNĐ</td>
+    <td>${new Date(item.available_date).toLocaleDateString()}</td>
+    <td>
+      <a href="/homeAdmin/editFoodItem/${
+        item.id
+      }" class="action-btn edit-btn">Chỉnh Sửa</a>
+      <a href="#" onclick="deleteFoodItem(${
+        item.id
+      })" class="action-btn delete-btn">Xóa</a>
+    </td>
+  `;
+
+            foodItemsList.appendChild(row);
+          });
+        } catch (error) {
+          console.error("Lỗi khi tải danh sách món ăn:", error);
+        }
+      }
+      document.addEventListener("DOMContentLoaded", fetchFoodItems);
+    </script>
   </body>
 </html>

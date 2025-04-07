@@ -13,6 +13,7 @@ const addFoodItem = async (
     "INSERT INTO food_items (name_food, description, price, image_url, available_date) VALUES (?, ?, ?, ?, ?)",
     [nameFood, description, price, imageUrl, availableDate]
   );
+  console.log('---------');
   return result.insertId;
 };
 

@@ -20,13 +20,17 @@ app.use(
     cookie: { secure: false }, // Cấu hình cookie (true nếu bạn sử dụng HTTPS)
   })
 );
+app.use(express.json()); // Để xử lý JSON body
+app.use(express.urlencoded({ extended: true }));
 
 // Declare routes for the app
 const userRoutes = require("./routes/userRoutes");
 const pageRoutes = require("./routes/pageRoutes");
+const foodItemsRoutes = require("./routes/foodItemRoutes");
 
 // use routes
 app.use("/api/user", userRoutes);
+app.use("/api/foodItems", foodItemsRoutes);
 app.use("/", pageRoutes);
 
 // Định nghĩa route chính và điều hướng đến trang HTML

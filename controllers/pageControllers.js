@@ -12,8 +12,13 @@ const renderLoginPage = async (req, res) => {
   res.sendFile(path.join(__dirname, "../views/login.html"));
 };
 
+const renderCreateFoodItem = async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/admin/food_item_create.html"));
+}
+
 module.exports = {
   renderHomePage,
   renderHomeAdminPage,
   renderLoginPage,
+  renderCreateFoodItem
 };
