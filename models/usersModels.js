@@ -14,7 +14,7 @@ const addUser = async (username, password, fullname, role, employeeCode) => {
 // find user by id
 const findUserById = async (id) => {
   const [result] = await db.query("SELECT * FROM users WHERE id = ?", [id]);
-  return result.length > 0 ? result[0] : null;
+  return result[0];
 };
 
 // find user by userName
@@ -51,4 +51,5 @@ module.exports = {
   getAllUsers,
   updateUserById,
   findUserByUserName,
+  findUserById
 };

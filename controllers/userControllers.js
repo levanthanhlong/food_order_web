@@ -70,7 +70,7 @@ const login = async (req, res) => {
     const userId = user.id;
     // Tạo JWT token với userID
     const token = jwt.sign({ userId }, "thanh");
-
+    console.log(token);
     // Lưu thông tin đăng nhập vào session
     req.session.loggedin = true;
     req.session.username = username;
@@ -80,7 +80,7 @@ const login = async (req, res) => {
     }
     return res
       .status(201)
-      .json({ status: 1, message: "Login successful!", role: role, token });
+      .json({ status: 1, message: "Login successful!", role: role, token: token });
   } catch (e) {
     return res.status(500).json({
       status: 0,
@@ -132,10 +132,31 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const getUserInfoById = async (req, res) => {
+  try {
+    const userId = req.user.userId; // Lấy userId từ token
+    const user = await userModels.findUserById(userId);
+
+    if (!user) {
+      return res.status(404).json({ status: 0, message: "User not found!" });
+    }
+
+    res.status(200).json({
+      status: 1,
+      message: "User info fetched successfully",
+      data: user,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ status: 0, message: "Server error" });
+  }
+};
+
 module.exports = {
   register,
   login,
   logout,
   getAllUsers,
   deleteUser,
+  getUserInfoById
 };

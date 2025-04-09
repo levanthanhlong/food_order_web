@@ -14,15 +14,27 @@
       <h1>Admin Món Ăn</h1>
       <nav>
         <ul>
-          <li><a href="/homeAdmin">🏠 Trang Chủ</a></li>
-          <li><a href="/homeAdmin/createFoodItem">🍽️ Thêm Món Ăn</a></li>
-          <li><a href="/homeAdmin/userManagerPage">👥 Quản Lý Người Dùng</a></li>
+          <li><a href="/homeAdmin">🍽️ Quản lý món ăn</a></li>
+          <li>
+            <a href="/homeAdmin/userManagerPage">👥 Quản Lý Người Dùng</a>
+          </li>
           <li><a href="/api/user/logout" class="logout">🚪 Đăng Xuất</a></li>
         </ul>
       </nav>
     </aside>
     <main class="main-content">
-      <h2>Danh Sách Món Ăn</h2>
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        "
+      >
+        <h2>Danh Sách Món Ăn</h2>
+        <a href="/homeAdmin/createFoodItem" class="action-btn edit-btn"
+          >Tạo món ăn mới</a
+        >
+      </div>
       <table id="foodItemsTable">
         <thead>
           <tr>

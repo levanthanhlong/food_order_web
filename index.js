@@ -34,10 +34,12 @@ app.use('/resources', express.static('resources'));
 const userRoutes = require("./routes/userRoutes");
 const pageRoutes = require("./routes/pageRoutes");
 const foodItemsRoutes = require("./routes/foodItemRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 // use routes
 app.use("/api/user", userRoutes);
 app.use("/api/foodItems", foodItemsRoutes);
+app.use("/api/orders",orderRoutes);
 app.use("/", pageRoutes);
 
 // Định nghĩa route chính và điều hướng đến trang HTML

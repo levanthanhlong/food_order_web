@@ -18,7 +18,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-
 // router add new food item
 router.post(
   "/addNewFoodItem",
@@ -43,6 +42,12 @@ router.put(
   "/updateFoodItemById/:id",
   upload.single("image"),
   foodItemsControllers.updateFoodItemById
+);
+
+// router get list of food items on this week
+router.get(
+  "/getFoodItemsOnThisWeek",
+  foodItemsControllers.getFoodItemsOnThisWeek
 );
 
 module.exports = router;

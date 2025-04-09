@@ -55,6 +55,19 @@ const deleteFoodItemById = async (id) => {
   return result.affectedRows;
 };
 
+// get food items on this week
+const getFoodItemOnThisWeek = async () => {
+  const query = `
+    SELECT * FROM food_items 
+    WHERE available_date BETWEEN 
+      DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
+      AND DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY)
+    ORDER BY available_date ASC;
+  `;
+
+  const [result] = await db.query(query);
+  return result;
+};
 
 // Get All Food Items
 const getAllFoodItems = async () => {
@@ -75,14 +88,12 @@ const getAllFoodItemsInMonth = async (month, year) => {
 };
 
 
-
-
-
 module.exports = {
   addFoodItem,
   updateFoodItemById,
   deleteFoodItemById,
   getAllFoodItems,
   getAllFoodItemsInMonth,
-  getDetailFoodItemById
+  getDetailFoodItemById,
+  getFoodItemOnThisWeek
 };

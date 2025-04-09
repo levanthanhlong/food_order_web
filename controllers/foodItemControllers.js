@@ -95,7 +95,7 @@ const updateFoodItemById = async (req, res) => {
   try {
     const { id } = req.params;
     const { nameFood, description, price, availableDate } = req.body;
-    
+
     const image = req.file;
 
     const imageUrl = image ? `/resources/img_foods/${image.filename}` : null;
@@ -125,10 +125,31 @@ const updateFoodItemById = async (req, res) => {
   }
 };
 
+// get food item on this week
+const getFoodItemsOnThisWeek = async (req, res) => {
+  try {
+    const result = await foodItemsModels.getFoodItemOnThisWeek();
+
+    return res
+      .status(200)
+      .json({
+        status: 1,
+        message: "Load list of food items on this week successful",
+        data: result,
+      });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ status: 0, message: `Error load list of food items: ${err}` });
+  }
+};
+
 module.exports = {
   addFoodItem,
   getAllFoodItems,
   deleteFoodItemById,
   updateFoodItemById,
   getDetailFoodItemById,
+  getFoodItemsOnThisWeek,
 };
