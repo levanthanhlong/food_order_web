@@ -20,8 +20,15 @@ app.use(
     cookie: { secure: false }, // Cấu hình cookie (true nếu bạn sử dụng HTTPS)
   })
 );
+
 app.use(express.json()); // Để xử lý JSON body
 app.use(express.urlencoded({ extended: true }));
+
+// Cho phép truy cập thư mục resources từ browser
+app.use('/resources', express.static('resources'));
+
+
+
 
 // Declare routes for the app
 const userRoutes = require("./routes/userRoutes");

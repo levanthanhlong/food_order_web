@@ -22,17 +22,16 @@ const register = async (req, res) => {
       employeeCode
     );
     //create token when register successfully
-    const token = jwt.sign({ userId }, "thanh");
+    // const token = jwt.sign({ userId }, "thanh");
 
-    // Lưu thông tin đăng nhập vào session
-    req.session.loggedin = true;
-    req.session.username = username;
+    // // Lưu thông tin đăng nhập vào session
+    // req.session.loggedin = true;
+    // req.session.username = username;
 
     // return token
     return res.status(200).json({
       status: 1,
-      message: "Register successfully",
-      token: token,
+      message: `Create user + ${username} + successfully`,
     });
   } catch (e) {
     console.log(`error ${e}`);
@@ -99,8 +98,44 @@ const logout = (req, res) => {
   });
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    const result = await userModels.getAllUsers();
+    return res
+      .status(200)
+      .json({ status: 1, message: "Get list users successful", data: result });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ status: 0, message: "Error when get list users", error: err });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await userModels.deleteUserById(id);
+    if (!result) {
+      return res
+        .status(400)
+        .json({ status: 0, message: "Error when delete user" });
+    }
+    return res
+      .status(200)
+      .json({ status: 1, message: "Delete user successful" });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ status: 0, message: "Error when delete user", error: err });
+  }
+};
+
 module.exports = {
   register,
   login,
   logout,
+  getAllUsers,
+  deleteUser,
 };

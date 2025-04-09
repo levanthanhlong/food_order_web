@@ -7,119 +7,7 @@
       href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
       rel="stylesheet"
     />
-    <style>
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        font-family: "Roboto", sans-serif;
-      }
-
-      body {
-        display: flex;
-        min-height: 100vh;
-        background-color: #f4f6f8;
-        color: #333;
-      }
-
-      .sidebar {
-        width: 250px;
-        background-color: #2f3e46;
-        color: white;
-        padding: 20px;
-        flex-shrink: 0;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .sidebar h1 {
-        font-size: 22px;
-        margin-bottom: 30px;
-        color: #fff;
-        text-align: center;
-      }
-
-      .sidebar nav ul {
-        list-style-type: none;
-      }
-
-      .sidebar nav ul li {
-        margin: 15px 0;
-      }
-
-      .sidebar nav ul li a {
-        text-decoration: none;
-        color: #fff;
-        padding: 10px 15px;
-        display: block;
-        border-radius: 8px;
-        transition: background-color 0.3s;
-      }
-
-      .sidebar nav ul li a:hover {
-        background-color: #3e5a63;
-      }
-
-      .logout {
-        color: #ff6b6b !important;
-      }
-
-      .main-content {
-        flex: 1;
-        padding: 40px;
-      }
-
-      .main-content h2 {
-        font-size: 28px;
-        margin-bottom: 20px;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        background: #fff;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-      }
-
-      th,
-      td {
-        padding: 16px;
-        text-align: left;
-        border-bottom: 1px solid #eee;
-      }
-
-      th {
-        background-color: #f0f0f0;
-        font-weight: bold;
-      }
-
-      .action-btn {
-        padding: 6px 10px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-size: 14px;
-      }
-
-      .edit-btn {
-        background-color: #4caf50;
-        color: white;
-      }
-
-      .delete-btn {
-        background-color: #f44336;
-        color: white;
-      }
-
-      .edit-btn:hover {
-        background-color: #45a049;
-      }
-
-      .delete-btn:hover {
-        background-color: #e53935;
-      }
-    </style>
+    <link href="../../assets/css/home_admin.css" rel="stylesheet" />
   </head>
   <body>
     <aside class="sidebar">
@@ -127,12 +15,12 @@
       <nav>
         <ul>
           <li><a href="/homeAdmin">🏠 Trang Chủ</a></li>
-          <li><a href="/homeAdmin/createFoodItem">➕ Thêm Món Ăn</a></li>
-          <li><a href="/logout" class="logout">🚪 Đăng Xuất</a></li>
+          <li><a href="/homeAdmin/createFoodItem">🍽️ Thêm Món Ăn</a></li>
+          <li><a href="/homeAdmin/userManagerPage">👥 Quản Lý Người Dùng</a></li>
+          <li><a href="/api/user/logout" class="logout">🚪 Đăng Xuất</a></li>
         </ul>
       </nav>
     </aside>
-
     <main class="main-content">
       <h2>Danh Sách Món Ăn</h2>
       <table id="foodItemsTable">
@@ -150,7 +38,6 @@
         </tbody>
       </table>
     </main>
-
     <script>
       // Fetch food items và hiển thị chúng
       async function fetchFoodItems() {
@@ -168,22 +55,26 @@
               "<tr><td colspan='5'>Không có món ăn nào.</td></tr>";
             return;
           }
-          
+
           result.data.forEach((item) => {
             const row = document.createElement("tr");
 
             row.innerHTML = `
     <td>${item.name_food}</td>
-    <td>${item.description}</td>
+    <td>${
+      item.description.length > 50
+        ? item.description.substring(0, 50) + "..."
+        : item.description
+    }</td>
     <td>${item.price} VNĐ</td>
     <td>${new Date(item.available_date).toLocaleDateString()}</td>
     <td>
-      <a href="/homeAdmin/editFoodItem/${
+      <a href="/homeAdmin/updateFoodItem/${
         item.id
-      }" class="action-btn edit-btn">Chỉnh Sửa</a>
+      }" class="action-btn edit-btn">Edit</a>
       <a href="#" onclick="deleteFoodItem(${
         item.id
-      })" class="action-btn delete-btn">Xóa</a>
+      })" class="action-btn delete-btn">Delete</a>
     </td>
   `;
 
@@ -194,6 +85,27 @@
         }
       }
       document.addEventListener("DOMContentLoaded", fetchFoodItems);
+
+      /// function delete food item
+      function deleteFoodItem(id) {
+        if (confirm("Bạn có chắc muốn xoá món ăn này không?")) {
+          fetch(`/api/foodItems/deleteFoodItem/${id}`, {
+            method: "DELETE",
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.status === 1) {
+                alert(data.message);
+                fetchFoodItems(); // load lại danh sách
+              } else {
+                alert(data.message);
+              }
+            })
+            .catch((err) => {
+              console.error("Lỗi khi xoá món ăn:", err);
+            });
+        }
+      }
     </script>
   </body>
 </html>

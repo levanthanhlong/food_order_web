@@ -36,6 +36,16 @@ const updateFoodItemById = async (
   return result.affectedRows;
 };
 
+// get detail food item by id 
+const getDetailFoodItemById = async (id) => {
+  const [result] =  await db.query(
+    "SELECT * FROM food_items WHERE Id = ?",
+    [id]
+  );
+  // console.log(result);
+  return result.length > 0 ? result[0] : [];
+}
+
 // Delete Food Item by Id
 const deleteFoodItemById = async (id) => {
   const [result] = await db.query(
@@ -45,12 +55,14 @@ const deleteFoodItemById = async (id) => {
   return result.affectedRows;
 };
 
+
 // Get All Food Items
 const getAllFoodItems = async () => {
   const [result] = await db.query("SELECT * FROM food_items");
   return result;
 };
 
+// get all food items im month
 const getAllFoodItemsInMonth = async (month, year) => {
   const query = `
     SELECT * FROM food_items 
@@ -65,10 +77,12 @@ const getAllFoodItemsInMonth = async (month, year) => {
 
 
 
+
 module.exports = {
   addFoodItem,
   updateFoodItemById,
   deleteFoodItemById,
   getAllFoodItems,
-  getAllFoodItemsInMonth
+  getAllFoodItemsInMonth,
+  getDetailFoodItemById
 };

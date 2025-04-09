@@ -30,7 +30,6 @@ const findUserByUserName = async (username) => {
 // delete user by id
 const deleteUserById = async (id) => {
   const [result] = await db.query("DELETE FROM users WHERE id = ?", [id]);
-
   return result.affectedRows;
 };
 

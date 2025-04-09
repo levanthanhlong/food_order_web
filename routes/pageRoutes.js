@@ -13,6 +13,15 @@ router.get(
 );
 router.get("/login", pageController.renderLoginPage);
 
-router.get("/homeAdmin/createFoodItem", pageController.renderCreateFoodItem);
+router.get(
+  "/homeAdmin/createFoodItem",
+  pageController.renderCreateFoodItemPage
+);
+router.get("/homeAdmin/updateFoodItem/:id", pageController.renderFoodItemEditPage);
+
+router.get("/homeAdmin/userManagerPage", pageController.renderUserManagerPage);
+
+router.get("/homeAdmin/createUserPage", pageController.renderCreateUserPage);
+
 
 module.exports = router;
