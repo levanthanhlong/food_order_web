@@ -42,7 +42,19 @@ const addOrder = async (req, res) => {
 };
 
 // delete order by
-const deleteOrder = async (req, res) => {};
+const deleteOrder = async (req, res) => {
+  const {id} = req.params;
+  try{
+    const result = await ordersModels.removeOrder(id);
+    if(!result){
+      res.status(500).json({ status: 0, message: "Lỗi khi xoá" });
+    }
+    res.status(500).json({ status: 1, message: "Xoá thành công" });
+  }catch(err){
+    console.error("Lỗi khi xoá đơn hàng theo userId:", err);
+    res.status(500).json({ status: 0, message: err });
+  }
+};
 
 // get All order of user
 const getAllOrdersByUserId = async (req, res) => {
@@ -61,10 +73,11 @@ const getAllOrdersByUserId = async (req, res) => {
 const getAllOrderByUserIdForMonthYear = async (req, res) => {
   const { id } = req.params;
   const { month, year } = req.body;
-
+  console.log(id);
   try {
     const result = await ordersModels.getAllOrderByUserIdForMonthYear(id, month, year);
-    console.log();
+    console.log("--------list order------");
+    console.log(result);
     res.status(200).json({ status: 1, data: result });
   } catch (err) {
     console.error("Lỗi khi lấy đơn hàng theo userId:", error);

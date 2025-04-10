@@ -42,6 +42,7 @@
             <th>Mô Tả</th>
             <th>Giá (VNĐ)</th>
             <th>Ngày Cung Cấp</th>
+            <th>Số đơn đặt </th>
             <th>Hành Động</th>
           </tr>
         </thead>
@@ -79,7 +80,8 @@
         : item.description
     }</td>
     <td>${item.price} VNĐ</td>
-    <td>${new Date(item.available_date).toLocaleDateString()}</td>
+    <td>${new Date(item.available_date).toLocaleDateString("vi-VN")}</td>
+    <td>${item.total_ordered}</td>
     <td>
       <a href="/homeAdmin/updateFoodItem/${
         item.id

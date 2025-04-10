@@ -27,7 +27,7 @@ const editOrder = async (id, quantity, statusOrder) => {
 
 // remove order
 const removeOrder = async (id) => {
-  const [result] = await db.query("DELETE * FROM orders WHERE id = ?", [id]);
+  const [result] = await db.query("DELETE FROM orders WHERE id = ?", [id]);
   return result.affectedRows;
 };
 
@@ -54,7 +54,6 @@ const getAllOrdersByUserId = async (userId) => {
     WHERE orders.user_id = ?
     ORDER BY orders.id DESC
   `, [userId]);
-
   return result;
 };
 
@@ -62,8 +61,12 @@ const getAllOrdersByUserId = async (userId) => {
 const getAllOrderByUserIdForMonthYear = async (userId, month, year) => {
   const [result] = await db.query(
     `SELECT 
-       orders.*, 
-       food_items.name_food 
+       orders.id AS id,
+       orders.order_date,
+       orders.quantity,
+       food_items.name_food,
+       food_items.price,
+       food_items.image_url
      FROM orders 
      JOIN food_items ON orders.food_id = food_items.id
      WHERE orders.user_id = ? 

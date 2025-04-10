@@ -70,10 +70,23 @@ const getFoodItemOnThisWeek = async () => {
 };
 
 // Get All Food Items
+// const getAllFoodItems = async () => {
+//   const [result] = await db.query("SELECT * FROM food_items ORDER BY food_items.available_date DESC");
+//   return result;
+// };
 const getAllFoodItems = async () => {
-  const [result] = await db.query("SELECT * FROM food_items");
+  const [result] = await db.query(`
+    SELECT 
+      food_items.*, 
+      COALESCE(SUM(orders.quantity), 0) AS total_ordered 
+    FROM food_items
+    LEFT JOIN orders ON food_items.id = orders.food_id
+    GROUP BY food_items.id
+    ORDER BY food_items.available_date DESC
+  `);
   return result;
 };
+
 
 // get all food items im month
 const getAllFoodItemsInMonth = async (month, year) => {

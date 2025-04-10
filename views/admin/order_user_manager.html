@@ -48,7 +48,6 @@
             <option value="11">Tháng 11</option>
             <option value="12">Tháng 12</option>
           </select>
-
           <label for="year">Năm:</label>
           <select id="year">
             <option value="">-- Chọn năm --</option>
@@ -82,6 +81,10 @@
           <!-- Các orders sẽ được thêm vào đây thông qua JavaScript -->
         </tbody>
       </table>
+
+      <div id="showTotalMoney">
+        <!-- hiển thị tổng số tiền phải trả trong tháng -->
+      </div>
     </main>
   </body>
   <script>
@@ -101,45 +104,53 @@
         const response = await fetch(
           `/api/orders/getAllOrderByUserIdForMonthYear/${userId}`,
           {
-            method: "GET",
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ month, year }),
           }
         );
-          
+
         const result = await response.json();
-        alert(result.data.length);
+
         if (result.status === 1) {
           const orders = result.data;
           const orderItemsList = document.getElementById("orderItemsList");
+          const showTotalMoney = document.getElementById("showTotalMoney");
           orderItemsList.innerHTML = ""; // Xóa dữ liệu cũ
-
+          showTotalMoney.innerHTML = "";
+          var totalMoney = 0;
           if (orders.length === 0) {
             orderItemsList.innerHTML = `<tr><td colspan="5">Không có đơn hàng nào trong tháng ${month}/${year}</td></tr>`;
             return;
           }
 
           orders.forEach((order, index) => {
+            totalMoney = totalMoney + order.price;
             const row = document.createElement("tr");
             row.innerHTML = `
               <td>${index + 1}</td>
               <td>${order.name_food}</td>
-              <td>${order.price.toLocaleString()} VNĐ</td>
+              <td>${(order.price ?? 0).toLocaleString()} VNĐ</td>
               <td>${new Date(order.order_date).toLocaleDateString("vi-VN")}</td>
-              <td><button onclick="deleteOrder(${
-                order.id
-              })">❌ Xoá</button></td>
+              <td>
+                <a href="#" onclick="deleteOrder(${
+                  order.id
+                })" class="action-btn delete-btn">Delete</a>
+              </td>
+              
             `;
+
             orderItemsList.appendChild(row);
           });
+          showTotalMoney.innerHTML = `</br><h2>Tổng tiền trong tháng: ${(totalMoney ?? 0).toLocaleString()} VND</h2>`;
         } else {
           alert("Lỗi khi tải đơn hàng!");
         }
       } catch (error) {
         console.error("Lỗi fetchOrders:", error);
-        alert("Đã xảy ra lỗi server.");
+        alert(error);
       }
     }
 
