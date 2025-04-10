@@ -27,7 +27,12 @@
         <input type="text" id="name_food" name="name_food" required />
 
         <label for="description">Mô tả</label>
-        <textarea id="description" name="description" rows="3"></textarea>
+        <textarea
+          id="description"
+          name="description"
+          rows="3"
+          required
+        ></textarea>
 
         <label for="price">Giá (VNĐ)</label>
         <input type="number" id="price" name="price" required />
@@ -36,8 +41,7 @@
         <input type="date" id="available_date" name="available_date" required />
 
         <label for="image">Hình ảnh</label>
-        <input type="file" id="image" name="image" accept="image/*" />
-
+        <input type="file" id="image" name="image" accept="image/*" required />
         <button type="submit">Thêm món</button>
       </form>
     </div>

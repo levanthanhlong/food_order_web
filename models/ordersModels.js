@@ -61,10 +61,14 @@ const getAllOrdersByUserId = async (userId) => {
 // get All order by userId for the month
 const getAllOrderByUserIdForMonthYear = async (userId, month, year) => {
   const [result] = await db.query(
-    `SELECT * FROM orders 
-     WHERE user_id = ? 
-     AND MONTH(order_date) = ? 
-     AND YEAR(order_date) = ?`,
+    `SELECT 
+       orders.*, 
+       food_items.name_food 
+     FROM orders 
+     JOIN food_items ON orders.food_id = food_items.id
+     WHERE orders.user_id = ? 
+     AND MONTH(orders.order_date) = ? 
+     AND YEAR(orders.order_date) = ?`,
     [userId, month, year]
   );
   return result;

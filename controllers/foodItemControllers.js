@@ -6,7 +6,9 @@ const addFoodItem = async (req, res) => {
   try {
     const { name_food, description, price, available_date } = req.body;
     const image = req.file;
-
+    if(price < 0){
+      return res.status(500).json({ status: 0, message: "Giá món ăn không hợp lệ" });
+    }
     const imageUrl = image ? `/resources/img_foods/${image.filename}` : null;
     const foodItemId = await foodItemsModels.addFoodItem(
       name_food,

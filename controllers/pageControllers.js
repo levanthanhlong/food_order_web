@@ -30,6 +30,10 @@ const renderUserManagerPage = async (req, res) => {
   res.sendFile(path.join(__dirname, "../views/admin/user_manager.html"));
 }
 
+// get order user manager page
+const renderOrderUserManagerPage = async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/admin/order_user_manager.html"));
+}
 // get create user page
 const renderCreateUserPage = async (req, res) => {
   res.sendFile(path.join(__dirname, "../views/admin/create_user.html"));
@@ -44,5 +48,6 @@ module.exports = {
   renderCreateFoodItemPage,
   renderFoodItemEditPage,
   renderCreateUserPage,
-  renderUserManagerPage
+  renderUserManagerPage,
+  renderOrderUserManagerPage
 };

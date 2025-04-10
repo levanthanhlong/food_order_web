@@ -7,6 +7,7 @@ router.post("/createOrder/:id", verifyToken, orderControllers.addOrder);
 router.delete("/deleteOrder");
 router.put("/updateOrder");
 router.get("/getAllOrdersByUserId", verifyToken, orderControllers.getAllOrdersByUserId);
+router.get("/getAllOrderByUserIdForMonthYear/:id", orderControllers.getAllOrderByUserIdForMonthYear);
 router.get("/getAllOrderOfUserInMonth");
 
 module.exports = router;

@@ -44,7 +44,7 @@ const addOrder = async (req, res) => {
 // delete order by
 const deleteOrder = async (req, res) => {};
 
-// get All order of user 
+// get All order of user
 const getAllOrdersByUserId = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -53,13 +53,28 @@ const getAllOrdersByUserId = async (req, res) => {
     console.log(orders);
     res.status(200).json({ success: true, data: orders });
   } catch (error) {
-    console.error("Lỗi khi lấy đơn hàng theo userId:", error);
+    console.error("Lỗi khi lấy đơn đặt theo userId:", error);
     res.status(500).json({ success: false, message: "Error server" });
+  }
+};
+
+const getAllOrderByUserIdForMonthYear = async (req, res) => {
+  const { id } = req.params;
+  const { month, year } = req.body;
+
+  try {
+    const result = await ordersModels.getAllOrderByUserIdForMonthYear(id, month, year);
+    console.log();
+    res.status(200).json({ status: 1, data: result });
+  } catch (err) {
+    console.error("Lỗi khi lấy đơn hàng theo userId:", error);
+    res.status(500).json({ status: 0, message: "Error server" });
   }
 };
 
 module.exports = {
   addOrder,
   deleteOrder,
-  getAllOrdersByUserId
+  getAllOrdersByUserId,
+  getAllOrderByUserIdForMonthYear,
 };

@@ -15,13 +15,31 @@ router.get("/login", pageController.renderLoginPage);
 
 router.get(
   "/homeAdmin/createFoodItem",
+  authController.requireLogin,
   pageController.renderCreateFoodItemPage
 );
-router.get("/homeAdmin/updateFoodItem/:id",authController.requireLogin, pageController.renderFoodItemEditPage);
+router.get(
+  "/homeAdmin/updateFoodItem/:id",
+  authController.requireLogin,
+  pageController.renderFoodItemEditPage
+);
 
-router.get("/homeAdmin/userManagerPage", authController.requireLogin,pageController.renderUserManagerPage);
+router.get(
+  "/homeAdmin/userManagerPage",
+  authController.requireLogin,
+  pageController.renderUserManagerPage
+);
 
-router.get("/homeAdmin/createUserPage", authController.requireLogin,pageController.renderCreateUserPage);
+router.get(
+  "/homeAdmin/userManagerPage/ordersUserManagerPage/:id",
+  authController.requireLogin,
+  pageController.renderOrderUserManagerPage
+);
 
+router.get(
+  "/homeAdmin/createUserPage",
+  authController.requireLogin,
+  pageController.renderCreateUserPage
+);
 
 module.exports = router;
