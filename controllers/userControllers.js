@@ -80,7 +80,12 @@ const login = async (req, res) => {
     }
     return res
       .status(201)
-      .json({ status: 1, message: "Login successful!", role: role, token: token });
+      .json({
+        status: 1,
+        message: "Login successful!",
+        role: role,
+        token: token,
+      });
   } catch (e) {
     return res.status(500).json({
       status: 0,
@@ -158,5 +163,5 @@ module.exports = {
   logout,
   getAllUsers,
   deleteUser,
-  getUserInfoById
+  getUserInfoById,
 };

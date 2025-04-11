@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const ordersModels = require("../models/ordersModels");
+const foodItemsModels = require("../models/foodItemsModels");
 
 // add order with userId and foodId
 const addOrder = async (req, res) => {
@@ -16,6 +17,24 @@ const addOrder = async (req, res) => {
       return res.status(400).json({
         status: 0,
         message: "Thiếu dữ liệu: quantity, orderDate hoặc statusOrder!",
+      });
+    }
+
+    const now = new Date();
+    const food = await foodItemsModels.getDetailFoodItemById(foodId);
+    // Lấy ngày có thể đặt món (available_date từ food)
+    const availableDate = new Date(food.available_date);
+
+    
+    // Tạo thời gian deadline: 10h sáng ngày availableDate
+    const deadline = new Date(availableDate);
+    deadline.setHours(10, 0, 0, 0); // 10:00:00.000
+
+    // So sánh
+    if (now > deadline) {
+      return res.status(400).json({
+        status: 0,
+        message: "Đã quá hạn đặt món (sau 10h sáng ngày phục vụ)!",
       });
     }
 
@@ -43,14 +62,14 @@ const addOrder = async (req, res) => {
 
 // delete order by
 const deleteOrder = async (req, res) => {
-  const {id} = req.params;
-  try{
+  const { id } = req.params;
+  try {
     const result = await ordersModels.removeOrder(id);
-    if(!result){
+    if (!result) {
       res.status(500).json({ status: 0, message: "Lỗi khi xoá" });
     }
     res.status(500).json({ status: 1, message: "Xoá thành công" });
-  }catch(err){
+  } catch (err) {
     console.error("Lỗi khi xoá đơn hàng theo userId:", err);
     res.status(500).json({ status: 0, message: err });
   }
@@ -75,7 +94,11 @@ const getAllOrderByUserIdForMonthYear = async (req, res) => {
   const { month, year } = req.body;
   console.log(id);
   try {
-    const result = await ordersModels.getAllOrderByUserIdForMonthYear(id, month, year);
+    const result = await ordersModels.getAllOrderByUserIdForMonthYear(
+      id,
+      month,
+      year
+    );
     console.log("--------list order------");
     console.log(result);
     res.status(200).json({ status: 1, data: result });

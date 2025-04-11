@@ -100,7 +100,9 @@ const updateFoodItemById = async (req, res) => {
 
     const image = req.file;
 
-    const imageUrl = image ? `/resources/img_foods/${image.filename}` : null;
+    const foodInfo = await foodItemsModels.getDetailFoodItemById(id);
+
+    const imageUrl = image ? `/resources/img_foods/${image.filename}` : foodInfo.image_url;
     const result = await foodItemsModels.updateFoodItemById(
       id,
       nameFood,

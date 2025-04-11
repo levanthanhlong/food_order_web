@@ -23,12 +23,14 @@
               required
             />
           </div>
-          <input type="submit" value="Login" class="btn" />
+          <input type="submit" id="alert" value="Login" class="btn" />
         </form>
-      
+        <div style="height: 20px"></div>
+        <div id="showAlert">
+          <!-- show Alert error ở đây -->
+        </div>
       </div>
     </div>
-
     <script>
       document
         .getElementById("loginForm")
@@ -37,6 +39,7 @@
 
           const username = document.getElementById("username").value;
           const password = document.getElementById("password").value;
+          const showAlert = document.getElementById("showAlert");
           console.log("-------");
           try {
             const response = await fetch("/api/user/login", {
@@ -44,11 +47,10 @@
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ username, password }),
             });
-            
+
             const data = await response.json();
             console.log("-------");
             if (data.status === 1) {
-
               console.log(data.token);
               // Lưu token vào localStorage (hoặc cookie)
               localStorage.setItem("token", data.token);
@@ -59,11 +61,32 @@
                 window.location.href = "/home";
               }
             } else {
-              alert(data.message); // Hiển thị lỗi nếu đăng nhập thất bại
+              const newDiv = document.createElement("div");
+              newDiv.textContent = data.message;
+              newDiv.style.padding = "10px";
+              newDiv.style.backgroundColor = "#d0f0c0";
+              newDiv.style.color = "red";
+
+              showAlert.appendChild(newDiv);
+              // Xoá sau 2 giây
+              setTimeout(() => {
+                showAlert.removeChild(newDiv);
+              }, 2000);
+              // alert(data.message); // Hiển thị lỗi nếu đăng nhập thất bại
             }
           } catch (error) {
             console.error("Lỗi:", error);
-            alert("Lỗi hệ thống, vui lòng thử lại!");
+            const newDiv = document.createElement("div");
+            newDiv.textContent = "Lỗi hệ thống, vui lòng thử lại!";
+            newDiv.style.padding = "10px";
+            newDiv.style.backgroundColor = "#d0f0c0";
+            newDiv.style.color = "red";
+            showAlert.appendChild(newDiv);
+            // Xoá sau 2 giây
+            setTimeout(() => {
+              showAlert.removeChild(newDiv);
+            }, 2000);
+            //alert("Lỗi hệ thống, vui lòng thử lại!");
           }
         });
     </script>
