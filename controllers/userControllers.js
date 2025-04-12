@@ -9,7 +9,7 @@ const register = async (req, res) => {
     if (isExistUser) {
       return res.status(400).json({
         status: 0,
-        message: "User already exists!",
+        message: "Tên đăng nhập đã tồn tại",
       });
     }
 
@@ -31,10 +31,19 @@ const register = async (req, res) => {
     // return token
     return res.status(200).json({
       status: 1,
-      message: `Create user + ${username} + successfully`,
+      message: `Tạo tài khoản + ${username} + thành công`,
     });
+    // error Error: Duplicate entry '21D190194' for key 'users.employee_code'
   } catch (e) {
     console.log(`error ${e}`);
+    const errorMessage = e?.message || e?.toString();
+
+    if (errorMessage.includes("Duplicate entry")) {
+      return res.status(400).json({
+        status: 0,
+        message: "Mã nhân viên đã tồn tại, vui lòng kiểm tra lại!",
+      });
+    }
     return res.status(500).json({
       status: 0,
       message: "An error occurred, please try again later!",
@@ -52,7 +61,7 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         status: 0,
-        message: "Incorrect username",
+        message: "Sai tên đăng nhập",
       });
     }
 
@@ -62,7 +71,7 @@ const login = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(400).json({
         status: 0,
-        message: "Incorrect password",
+        message: "Sai mật khẩu",
       });
     }
 
@@ -78,18 +87,16 @@ const login = async (req, res) => {
     if (username == "admin") {
       role = "admin";
     }
-    return res
-      .status(201)
-      .json({
-        status: 1,
-        message: "Login successful!",
-        role: role,
-        token: token,
-      });
+    return res.status(201).json({
+      status: 1,
+      message: "Đăng nhập thành công",
+      role: role,
+      token: token,
+    });
   } catch (e) {
     return res.status(500).json({
       status: 0,
-      message: "An error occurred, please try again later!",
+      message: "Lỗi từ server",
     });
   }
 };
@@ -108,12 +115,20 @@ const getAllUsers = async (req, res) => {
     const result = await userModels.getAllUsers();
     return res
       .status(200)
-      .json({ status: 1, message: "Get list users successful", data: result });
+      .json({
+        status: 1,
+        message: "Lấy danh sách người dùng thành công",
+        data: result,
+      });
   } catch (err) {
     console.log(err);
     return res
       .status(500)
-      .json({ status: 0, message: "Error when get list users", error: err });
+      .json({
+        status: 0,
+        message: "Lỗi khi lấy danh sách người dùng",
+        error: err,
+      });
   }
 };
 
@@ -124,16 +139,14 @@ const deleteUser = async (req, res) => {
     if (!result) {
       return res
         .status(400)
-        .json({ status: 0, message: "Error when delete user" });
+        .json({ status: 0, message: "Lỗi khi xoá người dùng" });
     }
-    return res
-      .status(200)
-      .json({ status: 1, message: "Delete user successful" });
+    return res.status(200).json({ status: 1, message: "Xoá thành công" });
   } catch (err) {
     console.log(err);
     return res
       .status(500)
-      .json({ status: 0, message: "Error when delete user", error: err });
+      .json({ status: 0, message: "Lỗi khi xoá người dùng", error: err });
   }
 };
 
@@ -148,12 +161,12 @@ const getUserInfoById = async (req, res) => {
 
     res.status(200).json({
       status: 1,
-      message: "User info fetched successfully",
+      message: "Lấy thông tin người dùng thành công",
       data: user,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ status: 0, message: "Server error" });
+    res.status(500).json({ status: 0, message: "Lỗi từ server" });
   }
 };
 

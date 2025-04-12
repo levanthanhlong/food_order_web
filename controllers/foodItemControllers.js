@@ -5,9 +5,12 @@ const foodItemsModels = require("../models/foodItemsModels");
 const addFoodItem = async (req, res) => {
   try {
     const { name_food, description, price, available_date } = req.body;
+
     const image = req.file;
-    if(price < 0){
-      return res.status(500).json({ status: 0, message: "Giá món ăn không hợp lệ" });
+    if (price <= 0) {
+      return res
+        .status(500)
+        .json({ status: 0, message: "Giá món ăn không hợp lệ" });
     }
     const imageUrl = image ? `/resources/img_foods/${image.filename}` : null;
     const foodItemId = await foodItemsModels.addFoodItem(
@@ -20,7 +23,7 @@ const addFoodItem = async (req, res) => {
     console.log(foodItemId);
     return res
       .status(201)
-      .json({ status: 1, message: "Create food item successful!" });
+      .json({ status: 1, message: "Tạo món ăn thành công" });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ status: 0, message: err });
@@ -36,7 +39,7 @@ const getAllFoodItems = async (req, res) => {
     if (foodItems.length == 0) {
       return res
         .status(404)
-        .json({ status: 0, message: "No food items found" });
+        .json({ status: 0, message: "Không tìm thấy món ăn nào" });
     }
     return res
       .status(200)
@@ -45,7 +48,7 @@ const getAllFoodItems = async (req, res) => {
     console.log(err);
     return res
       .status(500)
-      .json({ status: 0, message: "Error retrieving food items", error: err });
+      .json({ status: 0, message: "Lỗi từ server: ", error: err });
   }
 };
 
@@ -55,18 +58,16 @@ const deleteFoodItemById = async (req, res) => {
   try {
     const result = foodItemsModels.deleteFoodItemById(id);
     if (!result) {
-      return res
-        .status(400)
-        .json({ status: 0, message: "Error delete food items" });
+      return res.status(400).json({ status: 0, message: "Lỗi khi xoá món ăn" });
     }
     return res
       .status(200)
-      .json({ status: 1, message: "Delete food item successful" });
+      .json({ status: 1, message: "Xoá món ăn thành công" });
   } catch (err) {
     console.log(err);
     return res
       .status(500)
-      .json({ status: 0, message: "Error retrieving food items", error: err });
+      .json({ status: 0, message: "Lỗi từ server: ", error: err });
   }
 };
 
@@ -100,9 +101,19 @@ const updateFoodItemById = async (req, res) => {
 
     const image = req.file;
 
+    const foodOld = foodItemsModels.getDetailFoodItemById(id);
+
+    if (price <= 0) {
+      return res
+        .status(400)
+        .json({ status: 0, message: "Giá bạn nhập phải lớn hơn 0" });
+    }
+
     const foodInfo = await foodItemsModels.getDetailFoodItemById(id);
 
-    const imageUrl = image ? `/resources/img_foods/${image.filename}` : foodInfo.image_url;
+    const imageUrl = image
+      ? `/resources/img_foods/${image.filename}`
+      : foodInfo.image_url;
     const result = await foodItemsModels.updateFoodItemById(
       id,
       nameFood,
@@ -115,15 +126,15 @@ const updateFoodItemById = async (req, res) => {
     if (result === 0) {
       return res
         .status(400)
-        .json({ status: 0, message: "Error when update food item" });
+        .json({ status: 0, message: "Lỗi khi cập nhật món ăn" });
     }
 
-    return res.status(200).json({ status: 1, message: "Update successful" });
+    return res.status(200).json({ status: 1, message: "Cập nhật thành công" });
   } catch (err) {
     console.error("Error: ", err);
     return res.status(500).json({
       status: 0,
-      message: "Error when update food item",
+      message: "Lỗi khi cập nhật món ăn",
       error: err.message,
     });
   }
@@ -134,18 +145,16 @@ const getFoodItemsOnThisWeek = async (req, res) => {
   try {
     const result = await foodItemsModels.getFoodItemOnThisWeek();
 
-    return res
-      .status(200)
-      .json({
-        status: 1,
-        message: "Load list of food items on this week successful",
-        data: result,
-      });
+    return res.status(200).json({
+      status: 1,
+      message: "Lấy danh sách món ăn trong tuần thành công!",
+      data: result,
+    });
   } catch (err) {
     console.log(err);
     return res
       .status(500)
-      .json({ status: 0, message: `Error load list of food items: ${err}` });
+      .json({ status: 0, message: `Lỗi khi lấy danh sách món ăn: ${err}` });
   }
 };
 

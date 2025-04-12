@@ -12,20 +12,21 @@ const addOrder = async (req, res) => {
     console.log(quantity);
     console.log(orderDate);
     console.log(statusOrder);
+    
     // Kiểm tra dữ liệu đầu vào
-    if (!quantity || !orderDate || !statusOrder) {
-      return res.status(400).json({
-        status: 0,
-        message: "Thiếu dữ liệu: quantity, orderDate hoặc statusOrder!",
-      });
-    }
+    // if (!quantity || !orderDate || !statusOrder) {
+    //   return res.status(400).json({
+    //     status: 0,
+    //     message: "Thiếu dữ liệu: quantity, orderDate hoặc statusOrder!",
+    //   });
+    // }
 
     const now = new Date();
     const food = await foodItemsModels.getDetailFoodItemById(foodId);
     // Lấy ngày có thể đặt món (available_date từ food)
     const availableDate = new Date(food.available_date);
 
-    
+
     // Tạo thời gian deadline: 10h sáng ngày availableDate
     const deadline = new Date(availableDate);
     deadline.setHours(10, 0, 0, 0); // 10:00:00.000
@@ -104,7 +105,7 @@ const getAllOrderByUserIdForMonthYear = async (req, res) => {
     res.status(200).json({ status: 1, data: result });
   } catch (err) {
     console.error("Lỗi khi lấy đơn hàng theo userId:", error);
-    res.status(500).json({ status: 0, message: "Error server" });
+    res.status(500).json({ status: 0, message: "Lỗi từ server" });
   }
 };
 
